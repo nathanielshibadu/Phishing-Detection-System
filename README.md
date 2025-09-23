@@ -1,6 +1,6 @@
 # Detecting Phishing Websites Using Lightweight Machine Learning Models for Enhanced Web Security
 
-## 📌 Overview
+## Overview
 This project focuses on developing **lightweight machine learning models** for detecting phishing websites in **Kenya’s digital ecosystem**.  
 The system is designed to operate efficiently on **resource-constrained devices** (e.g., mobile phones with limited processing power) while maintaining high detection accuracy for **locally targeted phishing threats** (e.g., M-PESA, eCitizen, KRA, banking portals, e-commerce sites).
 
@@ -8,7 +8,7 @@ The project integrates **data acquisition, feature engineering, model developmen
 
 ---
 
-## 🎯 Objectives
+## Objectives
 - Analyse Kenya-specific phishing attacks and identify unique patterns.  
 - Develop lightweight ML models optimized for phishing detection.  
 - Implement a prototype system (API + Browser Extension).  
@@ -17,7 +17,7 @@ The project integrates **data acquisition, feature engineering, model developmen
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 phishing-detection-kenya/
 │
 ├── data/                     # datasets (global + Kenya-specific)
@@ -51,7 +51,7 @@ phishing-detection-kenya/
 
 ---
 
-## ⚙️ Tech Stack
+## Tech Stack
 - **Python** (primary ML language)  
 - **Scikit-learn**, **XGBoost**, **Optuna** (ML models & optimization)  
 - **TensorFlow / TensorFlow.js** (lightweight neural networks & browser deployment)  
@@ -63,7 +63,7 @@ phishing-detection-kenya/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 ```bash
@@ -95,6 +95,9 @@ uvicorn main:app --reload
 - KRA & eCitizen portals
 - Kenyan banks (Equity, KCB, NCBA)
 - Local e-commerce (Jumia, Kilimall)
+
+---
+
 ## 📈 Evaluation Metrics
 - **Accuracy, Precision, Recall, F1-score**  
 - **AUC-ROC** – probabilistic output quality  
