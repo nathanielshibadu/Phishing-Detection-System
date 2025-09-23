@@ -21,7 +21,7 @@ The project integrates **data acquisition, feature engineering, model developmen
 ## 📂 Project Structure
 
 ```text
-phishing-detection-kenya/
+phishing-detection-system/
 │
 ├── data/                     # Datasets (global + Kenya-specific)
 │   ├── raw/                  # Original datasets (PhishTank, OpenPhish, M-PESA phishing, etc.)
