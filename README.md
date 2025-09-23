@@ -18,36 +18,40 @@ The project integrates **data acquisition, feature engineering, model developmen
 ---
 
 ## Project Structure
+## 📂 Project Structure
+
+```text
 phishing-detection-kenya/
 │
-├── data/                     # datasets (global + Kenya-specific)
-│   ├── raw/                  # original datasets (PhishTank, OpenPhish, M-PESA phishing, etc.)
-│   ├── processed/            # cleaned and preprocessed data
+├── data/                     # Datasets (global + Kenya-specific)
+│   ├── raw/                  # Original datasets (PhishTank, OpenPhish, M-PESA phishing, etc.)
+│   ├── processed/            # Cleaned and preprocessed data
 │
 ├── notebooks/                # Jupyter/Colab notebooks for experiments
 │   ├── data_exploration.ipynb
 │   ├── feature_engineering.ipynb
 │
-├── src/                      # source code
+├── src/                      # Source code
 │   ├── __init__.py
 │   ├── data_processing.py
 │   ├── feature_extraction.py
 │   ├── model_training.py
 │   ├── evaluation.py
 │
-├── models/                   # saved ML models
+├── models/                   # Saved ML models
 │
-├── deployment/               # web/API/browser extension prototype
+├── deployment/               # Web/API/browser extension prototype
 │   ├── api/                  # Flask/FastAPI backend
 │   ├── extension/            # Chrome extension code
 │
-├── docs/                     # documentation (proposal, diagrams, etc.)
+├── docs/                     # Documentation (proposal, diagrams, etc.)
 │
-├── tests/                    # unit & integration tests
+├── tests/                    # Unit & integration tests
 │
 ├── requirements.txt          # Python dependencies
 ├── README.md
-├── .gitignore
+└── .gitignore
+```
 
 ---
 
@@ -98,7 +102,7 @@ uvicorn main:app --reload
 
 ---
 
-## 📈 Evaluation Metrics
+## Evaluation Metrics
 - **Accuracy, Precision, Recall, F1-score**  
 - **AUC-ROC** – probabilistic output quality  
 - **Latency** – real-time classification within ~5 seconds  
@@ -106,7 +110,7 @@ uvicorn main:app --reload
 
 ---
 
-## 🛠️ Roadmap
+## Roadmap
 - [ ] Collect & preprocess datasets  
 - [ ] Feature engineering (URL, content, and Kenya-specific indicators)  
 - [ ] Train baseline ML models  
@@ -117,14 +121,11 @@ uvicorn main:app --reload
 
 ---
 
-## 📜 License
+## License
 This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.  
 
 ---
 
-## 👨‍💻 Author
+## Author
 **Nathaniel Noel Shibadu**  
----
 
-## 🙌 Acknowledgements
-- Open-source contributors and datasets: PhishTank, OpenPhish, Kaggle, Alexa/Tranco  
