@@ -1,0 +1,11 @@
+pandas
+numpy
+scikit-learn
+xgboost
+optuna
+flask
+fastapi
+tensorflow
+tensorflowjs
+psycopg2
+jupyter
