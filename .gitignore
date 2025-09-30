@@ -20,3 +20,10 @@ venv/
 # --- OS-specific ---
 .DS_Store        # macOS
 Thumbs.db        # Windows
+
+# --- Models ---
+models/
+*.pkl
+*.json
+*.h5
+
