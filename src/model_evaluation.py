@@ -83,119 +83,83 @@ def _get_probs(model, X):
     return np.asarray(preds)
 
 
-def evaluate_model(model, X, y, model_name="model", output_dir=REPORTS_DIR):
-    """Compute metrics, generate plots and return metrics dict."""
-    X_arr = X.values if hasattr(X, "values") else np.asarray(X)
-    y_arr = np.asarray(y).ravel()
+def evaluate_model(model, X_test, y_test, model_name="model"):
+    """
+    Unified evaluation function compatible with sklearn, keras, and xgboost Booster models.
+    Computes Accuracy, Precision, Recall, F1, and ROC AUC if available.
+    """
+    import numpy as np
+    from sklearn.metrics import (
+        accuracy_score,
+        precision_recall_fscore_support,
+        roc_auc_score
+    )
+    from sklearn.preprocessing import label_binarize
+    import xgboost as xgb
 
-    t0 = time.time()
-    y_pred = model.predict(X_arr)
-    inference_time = time.time() - t0
+    # Ensure arrays
+    X_arr = X_test.values if hasattr(X_test, "values") else np.asarray(X_test)
+    y_true = y_test.values.ravel() if hasattr(y_test, "values") else np.asarray(y_test).ravel()
 
-    # Try to get scores for ROC/PR
+    # Handle different model types
+    if hasattr(model, "predict"):  # sklearn / keras model
+        y_pred = model.predict(X_arr)
+    else:
+        # XGBoost Booster case
+        dtest = xgb.DMatrix(X_arr)
+        y_pred = (model.predict(dtest) > 0.5).astype(int)
+
+    # Basic metrics (weighted average handles imbalance)
+    precision, recall, f1, _ = precision_recall_fscore_support(
+        y_true, y_pred, average='weighted', zero_division=0
+    )
+    accuracy = accuracy_score(y_true, y_pred)
+
+    # ROC AUC (if possible)
+    roc_auc = None
     try:
-        y_score = _get_probs(model, X_arr)
-    except Exception:
-        y_score = None
+        if hasattr(model, "predict_proba"):
+            y_score = model.predict_proba(X_arr)
+        elif hasattr(model, "decision_function"):
+            y_score = model.decision_function(X_arr)
+        elif not hasattr(model, "predict"):  # Booster
+            dtest = xgb.DMatrix(X_arr)
+            y_score = model.predict(dtest)
+        else:
+            y_score = None
 
-    acc = accuracy_score(y_arr, y_pred)
-    precision, recall, f1, _ = precision_recall_fscore_support(y_arr, y_pred, average='binary', zero_division=0)
-    report = classification_report(y_arr, y_pred, zero_division=0, output_dict=True)
+        if y_score is not None:
+            if getattr(y_score, "ndim", 1) == 1 or (
+                hasattr(y_score, "ndim") and y_score.ndim == 2 and y_score.shape[1] == 2
+            ):
+                y_score_pos = y_score[:, 1] if hasattr(y_score, "ndim") and y_score.ndim == 2 else y_score
+                roc_auc = roc_auc_score(y_true, y_score_pos)
+            else:
+                classes = np.unique(y_true)
+                y_true_b = label_binarize(y_true, classes=classes)
+                if hasattr(y_score, "ndim") and y_score.ndim == 2 and y_score.shape[1] == y_true_b.shape[1]:
+                    roc_auc = roc_auc_score(y_true_b, y_score, average='macro', multi_class='ovr')
+    except Exception:
+        roc_auc = None
 
     metrics = {
         'model': model_name,
-        'accuracy': float(acc),
+        'accuracy': float(accuracy),
         'precision': float(precision),
         'recall': float(recall),
         'f1': float(f1),
-        'inference_time_sec': float(inference_time)
+        'roc_auc': float(roc_auc) if roc_auc is not None else None
     }
 
-    # Confusion matrix plot
-    cm = confusion_matrix(y_arr, y_pred)
-    fig_cm, ax = plt.subplots(figsize=(5, 4))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax)
-    ax.set_xlabel('Predicted')
-    ax.set_ylabel('Actual')
-    ax.set_title(f'Confusion Matrix - {model_name}')
-    cm_path = os.path.join(output_dir, f'{model_name}_confusion_matrix.png')
-    fig_cm.tight_layout()
-    fig_cm.savefig(cm_path)
-    plt.close(fig_cm)
-
-    # ROC curve (binary)
-    if y_score is not None:
-        try:
-            # if multiclass probs matrix, try to compute micro-average ROC if possible
-            if y_score.ndim == 1 or (y_score.ndim == 2 and y_score.shape[1] == 2):
-                if y_score.ndim == 2:
-                    y_score_pos = y_score[:, 1]
-                else:
-                    y_score_pos = y_score
-                fpr, tpr, _ = roc_curve(y_arr, y_score_pos)
-                roc_auc = roc_auc_score(y_arr, y_score_pos)
-                fig_roc, ax = plt.subplots(figsize=(5, 4))
-                ax.plot(fpr, tpr, label=f'AUC = {roc_auc:.3f}')
-                ax.plot([0, 1], [0, 1], '--', color='gray')
-                ax.set_xlabel('False Positive Rate')
-                ax.set_ylabel('True Positive Rate')
-                ax.set_title(f'ROC Curve - {model_name}')
-                ax.legend(loc='lower right')
-                roc_path = os.path.join(output_dir, f'{model_name}_roc.png')
-                fig_roc.tight_layout()
-                fig_roc.savefig(roc_path)
-                plt.close(fig_roc)
-                metrics['roc_auc'] = float(roc_auc)
-        except Exception:
-            pass
-
-        # Precision-Recall curve (binary)
-        try:
-            if y_score.ndim == 1 or (y_score.ndim == 2 and y_score.shape[1] == 2):
-                y_score_pos = y_score[:, 1] if y_score.ndim == 2 else y_score
-                prec, rec, _ = precision_recall_curve(y_arr, y_score_pos)
-                auc_pr = np.trapz(prec, rec)
-                fig_pr, ax = plt.subplots(figsize=(5, 4))
-                ax.plot(rec, prec, label=f'PR AUC = {auc_pr:.3f}')
-                ax.set_xlabel('Recall')
-                ax.set_ylabel('Precision')
-                ax.set_title(f'Precision-Recall Curve - {model_name}')
-                ax.legend(loc='lower left')
-                pr_path = os.path.join(output_dir, f'{model_name}_precision_recall.png')
-                fig_pr.tight_layout()
-                fig_pr.savefig(pr_path)
-                plt.close(fig_pr)
-                metrics['pr_auc'] = float(auc_pr)
-        except Exception:
-            pass
-
-    # Feature importance for tree-based models
-    try:
-        if hasattr(model, 'feature_importances_'):
-            fi = model.feature_importances_
-            feature_names = X.columns.tolist()
-            fi_df = pd.DataFrame({'feature': feature_names, 'importance': fi})
-            fi_df = fi_df.sort_values('importance', ascending=False).head(30)
-            fig_fi, ax = plt.subplots(figsize=(6, max(4, 0.3 * len(fi_df))))
-            sns.barplot(x='importance', y='feature', data=fi_df, ax=ax)
-            ax.set_title(f'Feature Importances - {model_name}')
-            fi_path = os.path.join(output_dir, f'{model_name}_feature_importance.png')
-            fig_fi.tight_layout()
-            fig_fi.savefig(fi_path)
-            plt.close(fig_fi)
-            metrics['has_feature_importance'] = True
-    except Exception:
-        metrics['has_feature_importance'] = False
-
-    # Save classification report as csv
-    try:
-        cr_df = pd.DataFrame(report).transpose()
-        cr_path = os.path.join(output_dir, f'{model_name}_classification_report.csv')
-        cr_df.to_csv(cr_path, index=True)
-    except Exception:
-        pass
+    print(f"\nEvaluation results for {model_name}:")
+    print(f"  Accuracy : {metrics['accuracy']:.4f}")
+    print(f"  Precision: {metrics['precision']:.4f}")
+    print(f"  Recall   : {metrics['recall']:.4f}")
+    print(f"  F1-score : {metrics['f1']:.4f}")
+    print(f"  ROC AUC  : {metrics['roc_auc']:.4f}" if metrics['roc_auc'] is not None else "  ROC AUC  : N/A")
 
     return metrics
+
 
 
 def evaluate_model_from_path(model_path, X, y, output_dir=REPORTS_DIR):
@@ -239,87 +203,6 @@ def main(model_paths=None):
 
 if __name__ == "__main__":
     main()
-
-# ...existing code...
-
-def evaluate_model(model, X_test, y_test):
-    import numpy as np
-    from sklearn.metrics import (
-        accuracy_score,
-        precision_recall_fscore_support,
-        roc_auc_score
-    )
-    from sklearn.preprocessing import label_binarize
-
-    # Ensure arrays
-    X_arr = X_test.values if hasattr(X_test, "values") else np.asarray(X_test)
-    y_true = y_test.values.ravel() if hasattr(y_test, "values") else np.asarray(y_test).ravel()
-
-    # Predictions
-    y_pred = model.predict(X_arr)
-
-    # Basic metrics (use weighted average to handle class imbalance / multiclass)
-    precision, recall, f1, _ = precision_recall_fscore_support(
-        y_true, y_pred, average='weighted', zero_division=0
-    )
-    accuracy = accuracy_score(y_true, y_pred)
-
-    # ROC AUC (handle binary and multiclass)
-    roc_auc = None
-    try:
-        # obtain score/probabilities if available
-        if hasattr(model, "predict_proba"):
-            y_score = model.predict_proba(X_arr)
-        elif hasattr(model, "decision_function"):
-            y_score = model.decision_function(X_arr)
-            # decision_function might return shape (n_samples,) for binary; make it (n_samples,1)
-            if y_score.ndim == 1:
-                y_score = y_score
-        else:
-            y_score = None
-
-        if y_score is not None:
-            # binary case: single-dim scores or two-column probabilities
-            if getattr(y_score, "ndim", 1) == 1 or (hasattr(y_score, "ndim") and y_score.ndim == 2 and y_score.shape[1] == 2):
-                if hasattr(y_score, "ndim") and y_score.ndim == 2:
-                    y_score_pos = y_score[:, 1]
-                else:
-                    y_score_pos = y_score
-                roc_auc = roc_auc_score(y_true, y_score_pos)
-            else:
-                # multiclass: binarize true labels and compute macro OVR AUC
-                classes = np.unique(y_true)
-                y_true_b = label_binarize(y_true, classes=classes)
-                # If score columns match classes, compute multiclass AUC
-                if hasattr(y_score, "ndim") and y_score.ndim == 2 and y_score.shape[1] == y_true_b.shape[1]:
-                    roc_auc = roc_auc_score(y_true_b, y_score, average='macro', multi_class='ovr')
-    except Exception:
-        roc_auc = None
-
-    metrics = {
-        'accuracy': float(accuracy),
-        'precision': float(precision),
-        'recall': float(recall),
-        'f1': float(f1),
-        'roc_auc': float(roc_auc) if roc_auc is not None else None
-    }
-
-    # Nicely formatted printout
-    print("Evaluation results:")
-    print(f"  Accuracy : {metrics['accuracy']:.4f}")
-    print(f"  Precision: {metrics['precision']:.4f}")
-    print(f"  Recall   : {metrics['recall']:.4f}")
-    print(f"  F1-score : {metrics['f1']:.4f}")
-    if metrics['roc_auc'] is not None:
-        print(f"  ROC AUC  : {metrics['roc_auc']:.4f}")
-    else:
-        print("  ROC AUC  : N/A (model does not provide probability/score or computation failed)")
-
-    return metrics
-
-# ...existing code...
-
-# ...existing code...
 
 def measure_inference_time(model, sample, iterations=100, warmup=5):
     """
