@@ -476,7 +476,7 @@ def plot_roc_curve(y_true, y_proba, model_name="Model"):
         raise RuntimeError(f"Failed to plot ROC curve for {model_name}: {e}")
 
 # ...existing code...
-```# filepath: c:\Users\Noel\Phishing-Detection-System\src\model_evaluation.py
+# filepath: c:\Users\Noel\Phishing-Detection-System\src\model_evaluation.py
 # ...existing code...
 
 def plot_roc_curve(y_true, y_proba, model_name="Model"):
