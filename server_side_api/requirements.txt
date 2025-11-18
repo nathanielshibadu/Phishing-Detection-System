@@ -1,0 +1,15 @@
+Flask==2.2.5
+flask-cors==3.0.10
+flask-admin==1.6.1
+flask-sqlalchemy==3.1.1
+SQLAlchemy==2.0.25
+
+tensorflow==2.17.1
+scikit-learn==1.5.2
+pandas==2.1.2
+numpy==1.26.0
+tldextract==3.4.0
+requests==2.31.0
+
+gunicorn==20.1.0
+python-dotenv==1.0.0
