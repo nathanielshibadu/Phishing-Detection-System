@@ -22,8 +22,7 @@ venv/
 Thumbs.db        # Windows
 
 # --- Models ---
-# models/
-# *.pkl
-# *.json
-# *.h5
+ *.pkl
+ *.json
+ *.h5
 
