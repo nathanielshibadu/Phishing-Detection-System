@@ -25,9 +25,3 @@ Thumbs.db        # Windows
  *.pkl
  *.json
  *.h5
-
-
-# --- Models ---
- *.pkl
- *.json
- *.h5
