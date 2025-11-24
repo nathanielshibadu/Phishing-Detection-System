@@ -21,6 +21,13 @@ venv/
 .DS_Store        # macOS
 Thumbs.db        # Windows
 
+# --- Data Files ---
+*.csv
+*.xlsx
+*.xls
+*.tsv
+*.parquet
+
 # --- Models ---
  *.pkl
  *.json

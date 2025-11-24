@@ -1,4 +1,4 @@
-# PhishGuard — Technical Report
+# PhishGuard - Technical Report
 
 **Date:** November 2025    
 **Project:** End-to-End Phishing URL Detection System (PhishGuard)
@@ -199,19 +199,19 @@ Key challenges included:
 
 ## 7. Production Improvements
 
-### 7.1 Short-Term (1–2 Weeks)
+### 7.1 Short-Term (1-2 Weeks)
 
 * Add automatic scanning on page load
 * Badge color indicators (safe/warning/danger)
 * Model threshold optimization
 
-### 7.2 Medium-Term (1–2 Months)
+### 7.2 Medium-Term (1-2 Months)
 
 * Expand training dataset with new phishing sources
 * Add entropy, randomness, or character diversity features
 * Switch to FastAPI for async backend
 
-### 7.3 Long-Term (3–6 Months)
+### 7.3 Long-Term (3-6 Months)
 
 * Deploy with TensorFlow Serving
 * Add central threat intelligence aggregation
@@ -227,13 +227,6 @@ PhishGuard successfully demonstrates a complete ML cybersecurity pipeline:
 * Browser extension with real-time detection
 * Integrated admin dashboard
 * Fully deployable and privacy-preserving
-
-This system meets the requirements of a practical phishing detection solution while showcasing skills in:
-
-* ML engineering
-* Full-stack ML deployment
-* Browser extension development
-* Real-world cybersecurity application design
 
 The project is ready for extension and production adaptation.
 
