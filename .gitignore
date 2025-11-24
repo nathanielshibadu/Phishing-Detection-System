@@ -25,3 +25,7 @@ Thumbs.db        # Windows
  *.pkl
  *.json
  *.h5
+
+# Ignore all .h5 and .pkl files inside the 'server' folder
+server/*.h5
+server/*.pkl
