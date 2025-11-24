@@ -1,131 +1,217 @@
-# Detecting Phishing Websites Using Lightweight Machine Learning Models for Enhanced Web Security
+# PhishGuard – Local Machine Learning Powered Phishing Detection System
 
-## Overview
-This project focuses on developing **lightweight machine learning models** for detecting phishing websites in **Kenya’s digital ecosystem**.  
-The system is designed to operate efficiently on **resource-constrained devices** (e.g., mobile phones with limited processing power) while maintaining high detection accuracy for **locally targeted phishing threats** (e.g., M-PESA, eCitizen, KRA, banking portals, e-commerce sites).
+PhishGuard is an end-to-end phishing URL detection system powered by a custom machine learning model. It includes:
 
-The project integrates **data acquisition, feature engineering, model development, evaluation, and deployment** into a research-driven prototype.
+* A TensorFlow phishing detection model
+* A custom URL preprocessor (lexical feature extraction + sequence tokenizer)
+* A local Flask API that serves predictions
+* A Chrome/Edge browser extension for real-time phishing detection
+* An admin dashboard inside the extension that stores detected phishing URLs
 
----
+## Project Overview
 
-## Objectives
-- Analyse Kenya-specific phishing attacks and identify unique patterns.  
-- Develop lightweight ML models optimized for phishing detection.  
-- Implement a prototype system (API + Browser Extension).  
-- Ensure models perform well under **computational and bandwidth constraints**.  
-- Benchmark results against existing global phishing detection approaches.  
+PhishGuard analyzes URLs using:
 
----
+* Tokenized URL sequences (top 5000 tokens, padded to length 100)
+* Lexical features (URL length, digits count, special chars, TLD length, HTTPS flag, etc.)
+* Deep learning classifier built with TensorFlow/Keras
+* Local API inference for real-time predictions
+* Browser extension communicating directly with your local server
+
+This system runs fully offline, making it ideal for privacy-preserving deployments.
 
 ## Project Structure
-## 📂 Project Structure
 
-```text
-phishing-detection-system/
+```
+PhishGuard/
 │
-├── data/                     # Datasets (global + Kenya-specific)
-│   ├── raw/                  # Original datasets (PhishTank, OpenPhish, M-PESA phishing, etc.)
-│   ├── processed/            # Cleaned and preprocessed data
+├── server/
+│   ├── server.py
+│   ├── utils.py
+│   ├── preprocessor.pkl
+│   ├── phishguard.h5
+│   ├── label_encoder.pkl
+│   └── venv/
 │
-├── notebooks/                # Jupyter/Colab notebooks for experiments
-│   ├── data_exploration.ipynb
-│   ├── feature_engineering.ipynb
-│
-├── src/                      # Source code
-│   ├── __init__.py
-│   ├── data_processing.py
-│   ├── feature_extraction.py
-│   ├── model_training.py
-│   ├── evaluation.py
-│
-├── models/                   # Saved ML models
-│
-├── deployment/               # Web/API/browser extension prototype
-│   ├── api/                  # Flask/FastAPI backend
-│   ├── extension/            # Chrome extension code
-│
-├── docs/                     # Documentation (proposal, diagrams, etc.)
-│
-├── tests/                    # Unit & integration tests
-│
-├── requirements.txt          # Python dependencies
-├── README.md
-└── .gitignore
+└── extension/
+    ├── manifest.json
+    ├── popup.html
+    ├── popup.js
+    ├── service_worker.js
+    ├── content_script.js
+    ├── admin/
+    │   ├── dashboard.html
+    │   └── dashboard.js
+    └── icons/
 ```
 
----
+## Installation (Windows)
 
-## Tech Stack
-- **Python** (primary ML language)  
-- **Scikit-learn**, **XGBoost**, **Optuna** (ML models & optimization)  
-- **TensorFlow / TensorFlow.js** (lightweight neural networks & browser deployment)  
-- **Flask / FastAPI** (backend APIs)  
-- **PostgreSQL** (database for feature storage & metadata)  
-- **JavaScript + Chrome Extension APIs** (browser integration)  
-- **Google Colab** (experiments & GPU support)  
-- **Git & GitHub** (version control & collaboration)  
+### 1. Install Python 3.10
 
----
+TensorFlow 2.17 (Windows supported) requires Python 3.10.
 
-## Getting Started
+Download: https://www.python.org/downloads/release/python-31012/
 
-### 1. Clone the repository
+### 2. Clone the Repository
+
 ```bash
-git clone https://github.com/<your-username>/phishing-detection-kenya.git
-cd phishing-detection-kenya
+git clone https://github.com/yourusername/PhishGuard.git
+cd PhishGuard
 ```
-### 2. Create a virtual environment
+
+### 3. Set Up Virtual Environment
+
 ```bash
-python -m venv venv
-source venv/bin/activate   # On Linux/Mac
-venv\Scripts\activate      # On Windows
+cd server
+python3.10 -m venv venv
+.\venv\Scripts\Activate.ps1
 ```
-### 3. Install dependencies
+
+### 4. Install Dependencies
+
+Required packages:
+
+```
+tensorflow==2.17.0
+numpy==1.26.4
+pandas==2.1.4
+scikit-learn==1.3.2
+tldextract==5.3.0
+flask==2.2.5
+flask-cors==3.0.10
+requests==2.31.0
+protobuf==4.25.3
+h5py==3.10.0
+```
+
+Install:
+
 ```bash
 pip install -r requirements.txt
 ```
-### 4. Run Jupyter/Colab notebooks
+
+### 5. Add Model Artifacts
+
+Place in `/server`:
+
+* `phishguard.h5`
+* `preprocessor.pkl`
+* `label_encoder.pkl` (optional)
+* `utils.py`
+* `server.py`
+
+### 6. Start the Local PhishGuard API
+
 ```bash
-cd deployment/api
-uvicorn main:app --reload
+python server.py
 ```
 
----
+You will see:
 
-## Datasets
-- Global phishing datasets: PhishTank, Kaggle.
-- Kenya-specific phishing URLs:
-- M-PESA & Safaricom clones
-- KRA & eCitizen portals
-- Kenyan banks (Equity, KCB, NCBA)
-- Local e-commerce (Jumia, Kilimall)
+```
+PhishGuard API running at http://127.0.0.1:5000
+```
 
----
+## API Usage
 
-## Evaluation Metrics
-- **Accuracy, Precision, Recall, F1-score**  
-- **AUC-ROC** – probabilistic output quality  
-- **Latency** – real-time classification within ~5 seconds  
-- **Resource usage** – CPU & memory footprint for browser deployment  
+### POST /predict
 
----
+**Request**
 
-## Roadmap
-- [ ] Collect & preprocess datasets  
-- [ ] Feature engineering (URL, content, and Kenya-specific indicators)  
-- [ ] Train baseline ML models  
-- [ ] Optimize lightweight models (XGBoost, compressed neural networks)  
-- [ ] Develop REST API (Flask/FastAPI)  
-- [ ] Build browser extension (Chrome APIs + TensorFlow.js)  
-- [ ] Deploy and evaluate in real-world scenarios  
+```json
+{
+  "url": "http://example.com"
+}
+```
 
----
+**Response**
 
-## License
-This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.  
+```json
+{
+  "url": "http://example.com",
+  "label": "phishing",
+  "confidence": 0.97,
+  "probs": {
+    "phishing": 0.97,
+    "legit": 0.03
+  }
+}
+```
 
----
+## Browser Extension Setup
 
-## Author
-**Nathaniel Shibadu**  
+* Open Chrome or Edge
+* Navigate to: `chrome://extensions/`
+* Enable **Developer Mode**
+* Click **Load Unpacked**
+* Select the `extension` folder
 
+You will now see the PhishGuard icon in your browser.
+
+## Features of the Browser Extension
+
+### Real-time URL scanning
+
+Click **Scan Current Page** to classify any website.
+
+### Admin Dashboard
+
+A complete UI that stores all detected phishing URLs:
+
+* URL
+* Detection timestamp
+* Confidence score
+* Delete single entries
+* Clear all logs
+
+Stored using `chrome.storage.local`.
+
+### Local API Communication
+
+All detection happens on your machine — no external requests.
+
+## Admin Dashboard Structure
+
+```
+extension/admin/
+│
+├── dashboard.html
+└── dashboard.js
+```
+
+The dashboard loads dynamically and provides:
+
+* A table of logged phishing URLs
+* Buttons to clear or delete entries
+* Automatic log updates
+
+## Important Notes
+
+### 1. TensorFlow Version
+
+Your model was trained in Colab using TensorFlow 2.19, but Windows only supports TensorFlow up to 2.17.
+
+The model loads successfully using TF 2.17 as long as:
+
+* NumPy is below 2.0 (`numpy==1.26.4`)
+* Scikit-learn is below 1.4 (`1.3.2` matches perfectly)
+
+### 2. Preprocessor Compatibility
+
+`utils.py` must remain identical to the version used during training so that your custom class unpickles correctly.
+
+### 3. API Must Be Running
+
+The extension depends on the local API. If the server is offline, you will see an "API unreachable" message.
+
+## Future Enhancements
+
+Optional improvements:
+
+* Auto-scan page on visit
+* Badge color indicators (red/yellow/green)
+* API analytics dashboard
+* Cloud-hosted version
+* Export phishing logs to CSV
+* Advanced ML model retraining pipeline

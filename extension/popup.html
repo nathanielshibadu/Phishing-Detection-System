@@ -1,23 +1,62 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>PhishGuard</title>
-    <style>
-      body { font-family: Arial, sans-serif; width: 320px; padding: 12px; }
-      button { padding: 8px 12px; }
-      .result { margin-top: 12px; padding: 8px; border-radius: 6px; background: #f6f6f6; }
-      .error { color: red; }
-    </style>
-  </head>
-  <body>
-    <h3>PhishGuard</h3>
-    <div>
-      <button id="checkBtn">Check current page</button>
-    </div>
-    <div id="status"></div>
-    <div id="result" class="result"></div>
+<head>
+  <title>PhishGuard</title>
+  <style>
+    body {
+      width: 280px;
+      padding: 15px;
+      font-family: Arial;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+    #result {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .phishing {
+      background: #ffcccc;
+      color: #a10000;
+    }
+    .legit {
+      background: #ccffd5;
+      color: #006600;
+    }
+    .unknown {
+      background: #e7e7e7;
+      color: #333;
+    }
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      background: #007bff;
+      color: white;
+      font-size: 15px;
+    }
+    #openDashboard {
+      background: #333;
+    }
+  </style>
+</head>
 
-    <script src="popup.js"></script>
-  </body>
+<body>
+  <h2>PhishGuard</h2>
+
+  <button id="scanBtn">Scan Current Page</button>
+  <button id="openDashboard">Open Admin Dashboard</button>
+
+  <div id="result" class="unknown">Click Scan to analyze the URL</div>
+
+  <script src="popup.js"></script>
+</body>
 </html>
