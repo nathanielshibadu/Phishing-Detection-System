@@ -82,10 +82,10 @@ The branches are concatenated and passed to:
 
 | Metric | Score |
 |--------|-------|
-| Accuracy | 93–95% |
-| F1 Score | ~92% |
-| ROC-AUC | ~0.95 |
-| Inference Time | ~50–70 ms |
+| Accuracy | 89% |
+| F1 Score | 0.89 |
+| ROC-AUC | 0.95 |
+| Inference Time | 50–70 ms |
 
 ### 4.2 Observations
 
