@@ -1,6 +1,6 @@
-# PhishGuard - Local Machine Learning Powered Phishing Detection System
+# PhishGuard: An On-Device Machine Learning System for Real-Time Phishing URL Classification.
 
-PhishGuard is an end-to-end phishing URL detection system powered by a custom machine learning model. It includes:
+PhishGuard is an end to end phishing URL detection system powered by a custom machine learning model. It includes:
 
 * A TensorFlow phishing detection model
 * A custom URL preprocessor (lexical feature extraction + sequence tokenizer)
