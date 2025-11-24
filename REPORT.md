@@ -1,18 +1,18 @@
 # PhishGuard - Technical Report
 
 **Date:** November 2025    
-**Project:** End-to-End Phishing URL Detection System (PhishGuard)
+**Project:** End to End Phishing URL Detection System (PhishGuard)
 
 ## 1. Executive Summary
 
-PhishGuard is an end-to-end phishing detection system integrating:
+PhishGuard is an end to end phishing detection system integrating:
 
 * A hybrid deep learning URL classifier (tokenized URLs + lexical features)
 * A custom preprocessing pipeline serialized for inference
 * A locally hosted Flask API for real-time classification
 * A Chrome browser extension with an Admin Dashboard for logging phishing detections
 
-The resulting system achieves high accuracy (~94–95%) with fast inference (<70 ms) and is fully deployable on Windows machines without external cloud dependencies.
+The resulting system achieves high accuracy (89%) with fast inference (<70 ms) and is fully deployable on Windows machines without external cloud dependencies.
 
 ## 2. Approach
 
@@ -87,7 +87,7 @@ The branches are concatenated and passed to:
 | ROC-AUC | 0.95 |
 | Inference Time | 50–70 ms |
 
-### 4.2 Observations
+### 4.1 Observations
 
 **Strengths:**
 
