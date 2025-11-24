@@ -1,4 +1,4 @@
-# PhishGuard – Local Machine Learning Powered Phishing Detection System
+# PhishGuard - Local Machine Learning Powered Phishing Detection System
 
 PhishGuard is an end-to-end phishing URL detection system powered by a custom machine learning model. It includes:
 
