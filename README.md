@@ -57,7 +57,7 @@ Download: https://www.python.org/downloads/release/python-31012/
 
 ```bash
 git clone https://github.com/nathanielshibadu/Phishing-Detection-System.git
-cd PhishGuard
+cd Phishing-Detection-System
 ```
 
 ### 3. Set Up Virtual Environment
