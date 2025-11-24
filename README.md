@@ -56,7 +56,7 @@ Download: https://www.python.org/downloads/release/python-31012/
 ### 2. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/PhishGuard.git
+git clone https://github.com/nathanielshibadu/Phishing-Detection-System.git
 cd PhishGuard
 ```
 
