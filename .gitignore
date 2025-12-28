@@ -1,0 +1,38 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- VS Code ---
+.vscode/
+
+# --- Logs ---
+*.log
+
+# --- OS-specific ---
+.DS_Store        # macOS
+Thumbs.db        # Windows
+
+# --- Data Files ---
+*.csv
+*.xlsx
+*.xls
+*.tsv
+*.parquet
+
+# --- Models ---
+ *.pkl
+ *.json
+ *.h5
+
+# Ignore all .h5 and .pkl files inside the 'server' folder
+server/*.h5
+server/*.pkl
