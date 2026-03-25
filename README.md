@@ -190,7 +190,7 @@ The dashboard loads dynamically and provides:
 
 ### 1. TensorFlow Version
 
-Your model was trained in Colab using TensorFlow 2.19, but Windows only supports TensorFlow up to 2.17.
+The model was trained in Colab using TensorFlow 2.19, but Windows only supports TensorFlow up to 2.17.
 
 The model loads successfully using TF 2.17 as long as:
 
@@ -199,7 +199,7 @@ The model loads successfully using TF 2.17 as long as:
 
 ### 2. Preprocessor Compatibility
 
-`utils.py` must remain identical to the version used during training so that your custom class unpickles correctly.
+`utils.py` must remain identical to the version used during training so that the custom class unpickles correctly.
 
 ### 3. API Must Be Running
 
