@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PhishGuard Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial; margin: 20px;
+        }
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 20px;
+        }
+        th, td {
+            padding: 10px; border-bottom: 1px solid #ddd;
+        }
+        th { background: #f5f5f5; }
+        .danger { color: red; font-weight: bold; }
+        .btn {
+            padding: 8px 12px; margin-top: 20px; cursor: pointer;
+            background: #d9534f; color: white; border: none; border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>PhishGuard Admin Dashboard</h2>
+<p>List of URLs detected as phishing.</p>
+
+<button id="clearLogs" class="btn">Clear All Logs</button>
+
+<table id="logTable">
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>Confidence</th>
+            <th>Detected At</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script src="dashboard.js"></script>
+</body>
+</html>
