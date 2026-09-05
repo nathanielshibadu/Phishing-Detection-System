@@ -7,7 +7,7 @@
 
 PhishGuard is an end to end phishing detection system integrating:
 
-* A hybrid deep learning URL classifier (tokenized URLs + lexical features)
+* A hybrid deep learning URL classifier (tokenised URLs + lexical features)
 * A custom preprocessing pipeline serialized for inference
 * A locally hosted Flask API for real-time classification
 * A Chrome browser extension with an Admin Dashboard for logging phishing detections
